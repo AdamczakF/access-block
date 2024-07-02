@@ -959,3 +959,10 @@ blockquote {
 	top: 0;
 	left: -2400px;
 }
+.lock-img-container {
+  align-items: center;
+  justify-content: center;
+}
+.lock-img {
+    width: 250px;
+}
