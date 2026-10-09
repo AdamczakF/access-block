@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="color-scheme" content="light dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src https://www.cloudflare.com https://one.one.one.one; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'unsafe-inline'; img-src data:; connect-src https://www.cloudflare.com https://one.one.one.one https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
 <title>403 · Not on the list</title>
 <style>
   /* Palette borrowed from Obsidian's default light/dark themes */
@@ -152,7 +152,7 @@
   <footer>Cloudflare Access + Gateway · this page is static and logs nothing</footer>
 </main>
 
-<script>
+<script data-cfasync="false">
 (() => {
   'use strict';
   const $ = (id) => document.getElementById(id);
