@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src https://www.cloudflare.com https://one.one.one.one; base-uri 'none'; form-action 'none'">
+<title>403 · Not on the list</title>
+<style>
+  /* Palette borrowed from Obsidian's default light/dark themes */
+  :root {
+    --bg: #ffffff; --bg2: #f6f6f6; --bg3: #ececec; --line: #e0e0e0;
+    --ink: #222222; --muted: #6b6b6b; --faint: #a0a0a0;
+    --accent: #705dcf; --accent-ink: #ffffff; --accent-soft: rgba(112, 93, 207, .12);
+    --red: #e93147; --orange: #d86a00; --green: #08994a; --blue: #086ddd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e; --bg2: #262626; --bg3: #363636; --line: #363636;
+      --ink: #dadada; --muted: #a3a3a3; --faint: #666666;
+      --accent: #8a74f0; --accent-ink: #12101f; --accent-soft: rgba(138, 116, 240, .16);
+      --red: #fb464c; --orange: #e9973f; --green: #44cf6e; --blue: #53a8ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg2); color: var(--ink);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 32px 16px 40px; }
+  .note { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 36px 40px 34px; box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 12px 32px -16px rgba(0,0,0,.3); }
+  .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; padding: 0; list-style: none; }
+  .tag { padding: 1px 9px 2px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: .82rem; font-weight: 500; }
+
+  h1 { margin: 0; font-size: clamp(2rem, 6vw, 2.6rem); line-height: 1.15; letter-spacing: -.02em; font-weight: 700; }
+  .lead { margin: 14px 0 0; color: var(--ink); font-size: 1.05rem; }
+  h2 { margin: 30px 0 10px; font-size: 1.3rem; line-height: 1.25; font-weight: 650; letter-spacing: -.01em; }
+  p { margin: 0 0 10px; }
+
+  /* Obsidian "Properties" panel */
+  .props { margin-top: 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 6px 0; }
+  .prop { display: grid; grid-template-columns: 9em 1fr; gap: 12px; align-items: center; padding: 5px 2px; min-height: 34px; }
+  .pk { color: var(--muted); font-size: .9rem; }
+  .pv { min-width: 0; font-size: .92rem; overflow-wrap: anywhere; }
+  .pill { display: inline-block; padding: 1px 10px 2px; border-radius: 999px; background: color-mix(in srgb, var(--red) 15%, transparent); color: var(--red); font-size: .82rem; font-weight: 600; }
+  .ref { display: flex; align-items: center; gap: 8px; }
+  .ident { width: 22px; height: 22px; flex: none; border-radius: 4px; background: var(--bg2); }
+  .ident rect { fill: hsl(var(--h, 260) 60% 58%); }
+
+  /* Obsidian callouts */
+  .callout { --c: var(--blue); margin: 10px 0 0; border-radius: 6px; padding: 12px 16px 14px; background: color-mix(in srgb, var(--c) 10%, transparent); border: 1px solid color-mix(in srgb, var(--c) 22%, transparent); }
+  .callout > .ct { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; color: var(--c); font-weight: 650; }
+  .callout > .ct .ic { display: inline-grid; place-items: center; width: 18px; height: 18px; font-size: 14px; }
+  .callout p { margin: 0 0 8px; } .callout p:last-child { margin-bottom: 0; }
+  .callout .muted { color: var(--muted); }
+  #verdict[data-state="bad"] { --c: var(--red); }
+  #verdict[data-state="warn"] { --c: var(--orange); }
+  #verdict[data-state="ok"] { --c: var(--green); }
+  #verdict[data-state="pending"], #verdict[data-state="unknown"] { --c: var(--muted); }
+
+  /* Task-list style requirements */
+  .checks { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 10px; }
+  .checks li { display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start; }
+  .checks b { display: block; font-weight: 600; line-height: 1.35; }
+  .checks small { display: block; color: var(--muted); font-size: .88rem; line-height: 1.45; margin-top: 2px; }
+  .box { width: 20px; height: 20px; margin-top: 1px; border-radius: 5px; border: 1.5px solid var(--faint); display: grid; place-items: center; font-size: 13px; line-height: 1; transition: background .2s, border-color .2s; }
+  li[data-c="on"] .box { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  li[data-c="on"] .box::after { content: "✓"; font-weight: 800; }
+  li[data-c="off"] .box { border-color: var(--red); }
+  li[data-c="off"] .box::after { content: "✕"; color: var(--red); font-weight: 800; }
+  li[data-c="unk"] .box::after { content: "?"; color: var(--faint); font-weight: 700; }
+
+  /* Table */
+  .tablewrap { margin-top: 6px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .rows { margin: 0; width: 100%; display: grid; }
+  .row { display: grid; grid-template-columns: 9.5em 1fr auto; gap: 12px; align-items: center; padding: 8px 14px; border-top: 1px solid var(--line); }
+  .row:first-child { border-top: 0; }
+  .row:nth-child(even) { background: var(--bg2); }
+  .row dt { color: var(--muted); font-size: .9rem; }
+  .row dd { margin: 0; font: 500 .85rem/1.4 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; overflow-wrap: anywhere; }
+  .row dd.wait { color: var(--faint); animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .45; } }
+  .chip { font: 700 .68rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: .06em; padding: 4px 8px; border-radius: 999px; text-transform: uppercase; }
+  .chip[data-s="ok"] { color: var(--green); background: color-mix(in srgb, var(--green) 14%, transparent); }
+  .chip[data-s="bad"] { color: var(--red); background: color-mix(in srgb, var(--red) 14%, transparent); }
+  .chip[data-s="na"] { color: var(--muted); background: var(--bg3); }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .btn { appearance: none; display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg3); color: var(--ink); font: inherit; font-size: .92rem; font-weight: 500; text-decoration: none; cursor: pointer; transition: border-color .12s, background .12s; }
+  .btn:hover { border-color: var(--accent); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn:disabled { opacity: .55; cursor: wait; }
+  .btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; pointer-events: none; }
+  .fine { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line); font-size: .82rem; color: var(--muted); }
+  .fine a, footer a { color: var(--accent); }
+  footer { margin-top: 16px; text-align: center; font-size: .78rem; color: var(--faint); }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 12px 8px 28px; } .note { padding: 24px 18px 24px; }
+    .prop { grid-template-columns: 1fr; gap: 0; padding: 6px 2px; }
+    .row { grid-template-columns: 1fr auto; } .row dt { grid-column: 1 / -1; margin-bottom: -6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <article class="note">
+    <ul class="tags" id="tags" aria-label="Tags"><li class="tag">#403</li><li class="tag">#forbidden</li></ul>
+    <h1>Not on the list.</h1>
+    <p class="lead" id="lead">The server understood your request to access this site, but decided to reject it. Don't take it personally: it turns everyone away, impartially, around the clock.</p>
+
+    <div class="props" aria-label="Properties">
+      <div class="prop"><span class="pk">You tried to open</span><span class="pv mono" id="dest">somewhere private</span></div>
+      <div class="prop"><span class="pk">Reference</span><span class="pv mono ref" id="ref"><span>none supplied</span></span></div>
+      <div class="prop"><span class="pk">Status</span><span class="pv"><span class="pill">Denied</span></span></div>
+    </div>
+
+    <h2>What happened?</h2>
+    <p id="why">This site is private. Before it even asks who you are, it checks the device you're using, and yours couldn't be confirmed as an approved one.</p>
+    <p id="intro">To get in, all three of these need to be true:</p>
+    <ul class="checks" id="checks">
+      <li data-c="unk" id="chk1"><span class="box" aria-hidden="true"></span><div><b>The WARP client is installed and connected.</b><small>WARP is a part of the Cloudflare One Client that sends your device's internet traffic through a secure tunnel.</small></div></li>
+      <li data-c="unk" id="chk2"><span class="box" aria-hidden="true"></span><div><b>You're signed in to it with your partner ID.</b><small>This ties your device to an approved identity, which is how the site learns that it's one of the allowed ones.</small></div></li>
+      <li data-c="unk" id="chk3"><span class="box" aria-hidden="true"></span><div><b>Gateway is on.</b><small>Gateway is the checkpoint your traffic passes through once you're enrolled. It should switch on by itself.</small></div></li>
+    </ul>
+
+    <div class="callout" id="verdict" data-state="pending" role="status" aria-live="polite">
+      <div class="ct"><span class="ic" id="vic">…</span><span id="vtitle">Checking your device…</span></div>
+      <p id="vtext">Asking Cloudflare what it makes of you.</p>
+    </div>
+
+    <h2>What this page can see</h2>
+    <div class="tablewrap"><dl class="rows" id="rows"></dl></div>
+
+    <div class="actions">
+      <a class="btn primary" id="mail" href="#">✉ Email Filip about it</a>
+      <button class="btn" id="recheck" type="button">↻ Re-check my device</button>
+      <a class="btn" id="retry" href="#" aria-disabled="true">Try again →</a>
+      <button class="btn" id="copy" type="button">⧉ Copy diagnostics</button>
+    </div>
+
+    <noscript><p class="fine">JavaScript is off, so I can't show you device details here. You still need the WARP client, signed in with your partner ID. Questions: adamczaf@tcd.ie.</p></noscript>
+    <p class="fine">Everything above is worked out inside your browser. The only request leaving this page is a status lookup to Cloudflare; nothing is sent to me unless you press the email button, and then you can read the message before it goes. Need the client? <a href="https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/" rel="noopener">Get WARP</a>.</p>
+  </article>
+  <footer>Cloudflare Access + Gateway · this page is static and logs nothing</footer>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const HOME = 'filipadamczak.com';
+  const FALLBACK_DEST = 'https://docs-private.filipadamczak.com/';
+  const CONTACT = ['adamczaf', 'tcd.ie'].join('@');
+  const TRACE_URLS = ['https://www.cloudflare.com/cdn-cgi/trace', 'https://one.one.one.one/cdn-cgi/trace'];
+
+  /* ---------- 1. The two query parameters Access hands us (+ the path) ---------- */
+  const q = new URLSearchParams(location.search);
+  const seg = location.pathname.split('/').filter(Boolean).map((s) => s.toLowerCase());
+  // Access redirects to /<identity|non-identity>/<code>-<slug>?kid=...&original_url=...
+  const stage = seg.includes('non-identity') ? 'non-identity' : seg.includes('identity') ? 'identity' : 'unknown';
+  const code = ((seg.map((s) => s.match(/^(\d{3})(?:-|$)/)).find(Boolean)) || [])[1] || '403';
+
+  // query 1: kid
+  const kidRaw = (q.get('kid') || '').trim().toLowerCase();
+  const kid = /^[0-9a-f]{16,128}$/.test(kidRaw) ? kidRaw : '';
+
+  // query 2: original_url (only trusted if it is https on our own domain, so this page can't be an open redirect)
+  function parseDest(raw) {
+    if (!raw) return null;
+    try {
+      const u = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : 'https://' + raw);
+      const h = u.hostname.toLowerCase();
+      if (u.protocol !== 'https:' || (h !== HOME && !h.endsWith('.' + HOME))) return null;
+      return u;
+    } catch (e) { return null; }
+  }
+  const destUrl = parseDest(q.get('original_url'));
+  const destLabel = destUrl ? destUrl.host + (destUrl.pathname === '/' ? '' : destUrl.pathname) : null;
+
+  /* ---------- 2. Static copy that depends on the redirect ---------- */
+  document.title = code + ' · Not on the list';
+  $('dest').textContent = destLabel || 'somewhere private';
+
+  const tags = $('tags'); tags.textContent = '';
+  [code, 'forbidden', stage === 'unknown' ? null : stage].filter(Boolean).forEach((t) => {
+    const li = document.createElement('li'); li.className = 'tag'; li.textContent = '#' + t; tags.appendChild(li);
+  });
+
+  if (stage === 'identity') {
+    $('lead').textContent = "The server understood your request to access this site, and your device checked out, but the account you signed in with isn't on the list. Don't take it personally: it turns everyone away, impartially, around the clock.";
+    $('why').textContent = "You got past the device check, then signed in with an account that isn't on the allowlist for this site. Wrong account, maybe? Try the one I know you by, or ask me to add it.";
+    $('intro').textContent = "For reference, this is what your device is currently showing:";
+  }
+
+  if (kid) {
+    const ref = $('ref');
+    ref.textContent = '';
+    ref.appendChild(identicon(kid));
+    const s = document.createElement('span');
+    s.textContent = kid.slice(0, 6) + '…' + kid.slice(-4);
+    s.title = kid;
+    ref.appendChild(s);
+  }
+
+  // A tiny deterministic picture of the reference ID, so two people quoting the same block can see it's the same one.
+  function identicon(hex) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 5 5');
+    svg.setAttribute('class', 'ident');
+    svg.setAttribute('aria-hidden', 'true');
+    const b = hex.match(/../g).map((h) => parseInt(h, 16));
+    svg.style.setProperty('--h', String(Math.round((b[0] / 255) * 360)));
+    for (let y = 0; y < 5; y++) {
+      for (let x = 0; x < 3; x++) {
+        if (b[(y * 3 + x + 1) % b.length] % 2 === 0) continue;
+        [x, 4 - x].filter((v, i, a) => a.indexOf(v) === i).forEach((cx) => {
+          const r = document.createElementNS(NS, 'rect');
+          r.setAttribute('x', cx); r.setAttribute('y', y); r.setAttribute('width', 1); r.setAttribute('height', 1);
+          svg.appendChild(r);
+        });
+      }
+    }
+    return svg;
+  }
+
+  /* ---------- 3. Device info: Cloudflare's /cdn-cgi/trace ---------- */
+  const ROWS = [
+    ['warp', 'WARP client'], ['gateway', 'Gateway'], ['ip', 'Egress IP'], ['where', 'Location'],
+    ['proto', 'Connection'], ['device', 'Device'], ['time', 'Your clock'],
+  ];
+  const rowsEl = $('rows');
+  ROWS.forEach(([id, label]) => {
+    const row = document.createElement('div'); row.className = 'row';
+    const dt = document.createElement('dt'); dt.textContent = label;
+    const dd = document.createElement('dd'); dd.id = 'v-' + id; dd.className = 'wait'; dd.textContent = 'checking…';
+    const chip = document.createElement('span'); chip.id = 'c-' + id; chip.className = 'chip'; chip.dataset.s = 'na'; chip.hidden = id !== 'warp' && id !== 'gateway';
+    row.append(dt, dd, chip);
+    rowsEl.appendChild(row);
+  });
+  function setRow(id, text, state) {
+    const dd = $('v-' + id); dd.textContent = text; dd.classList.remove('wait');
+    const c = $('c-' + id);
+    if (state) { c.dataset.s = state; c.textContent = { ok: 'on', bad: 'off', na: '?' }[state]; }
+  }
+  function setCheck(id, state) { $(id).dataset.c = state; }
+
+  async function getTrace() {
+    for (const url of TRACE_URLS) {
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), 6000);
+      try {
+        const r = await fetch(url, { cache: 'no-store', signal: ctl.signal });
+        if (!r.ok) continue;
+        const o = {};
+        (await r.text()).split('\n').forEach((l) => { const i = l.indexOf('='); if (i > 0) o[l.slice(0, i)] = l.slice(i + 1).trim(); });
+        if ('warp' in o) return o;
+      } catch (e) { /* try next */ } finally { clearTimeout(timer); }
+    }
+    return null;
+  }
+
+  function browserInfo() {
+    const ua = navigator.userAgent;
+    const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || 'unknown platform';
+    const browser = /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'a browser';
+    return platform + ' · ' + browser;
+  }
+
+  let trace = null, verdictState = 'pending';
+
+  function render(t) {
+    trace = t;
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    setRow('device', browserInfo(), 'na'); $('c-device').hidden = true;
+    setRow('time', new Date().toLocaleString('en-IE') + (tz ? ' (' + tz + ')' : ''), 'na'); $('c-time').hidden = true;
+
+    if (!t) {
+      ['warp', 'gateway'].forEach((id) => setRow(id, 'could not read', 'na'));
+      ['ip', 'where', 'proto'].forEach((id) => setRow(id, '—', 'na'));
+      ['chk1', 'chk2', 'chk3'].forEach((id) => setCheck(id, 'unk'));
+      return verdict('unknown', "Couldn't read your device status", "Either your browser blocked the lookup (like an ad-blocker) or you're offline. Try re-checking.");
+    }
+    const warpOn = t.warp === 'on' || t.warp === 'plus';
+    const gwOn = t.gateway === 'on';
+    setRow('warp', t.warp === 'plus' ? 'on (WARP+)' : t.warp || 'unknown', warpOn ? 'ok' : 'bad');
+    setRow('gateway', t.gateway || 'unknown', gwOn ? 'ok' : 'bad');
+    setRow('ip', t.ip || '—', 'na'); $('c-ip').hidden = true;
+    setRow('where', [t.loc, t.colo && 'via ' + t.colo].filter(Boolean).join(' ') || '—', 'na'); $('c-where').hidden = true;
+    setRow('proto', [t.http, t.tls].filter(Boolean).join(' · ') || '—', 'na'); $('c-proto').hidden = true;
+
+    setCheck('chk1', warpOn ? 'on' : 'off');
+    setCheck('chk2', gwOn ? 'on' : 'off');   // Gateway only switches on once the device is signed in to an organisation
+    setCheck('chk3', gwOn ? 'on' : 'off');
+
+    if (!warpOn) {
+      verdict('bad', "WARP isn't on", "The Cloudflare One client is required to reach this site. Install it, sign in with your partner ID, connect, then press Re-check below.");
+    } else if (!gwOn) {
+      verdict('warn', "WARP is on, but Gateway isn't", "That usually means the free 1.1.1.1 app isn't signed in to with your partner ID. Sign in to the client with your partner ID, then press Re-check below.");
+    } else {
+      verdict('ok', 'Your device looks right. Awkward.', "WARP and Gateway are both on, but this page can't see which organisation you're signed in to or whether your device passes the extra checks. Likeliest: you're signed in elsewhere, or there's another hidden check that fails. Reconnect WARP, re-check, and if it still rejects you, email me. The diagnostics are pre-filled.");
+    }
+  }
+
+  const ICONS = { pending: '…', unknown: 'ⓘ', bad: '✕', warn: '⚠', ok: '✓' };
+  function verdict(state, title, text) {
+    verdictState = state;
+    $('verdict').dataset.state = state;
+    $('vic').textContent = ICONS[state] || 'ⓘ';
+    $('vtitle').textContent = title;
+    $('vtext').textContent = text;
+    const retry = $('retry');
+    retry.setAttribute('aria-disabled', state === 'ok' ? 'false' : 'true');
+    retry.href = destUrl ? destUrl.href : FALLBACK_DEST;
+  }
+
+  /* ---------- 4. Contact + diagnostics ---------- */
+  function diagnostics() {
+    const t = trace || {};
+    return [
+      'Blocked page diagnostics',
+      'Reference (kid): ' + (kid || 'none'),
+      'Tried to open: ' + (destUrl ? destUrl.href : 'unknown'),
+      'Block stage: ' + stage + ' (' + code + ')',
+      'WARP: ' + (t.warp || 'unknown') + ' | Gateway: ' + (t.gateway || 'unknown'),
+      'IP: ' + (t.ip || 'unknown') + ' | Location: ' + (t.loc || '?') + ' via ' + (t.colo || '?'),
+      'Device: ' + browserInfo(),
+      'User agent: ' + navigator.userAgent,
+      'Time (UTC): ' + new Date().toISOString(),
+    ].join('\n');
+  }
+  function updateMail() {
+    const subject = 'Blocked from ' + (destLabel || 'docs-private') + (kid ? ' (ref ' + kid.slice(0, 8) + ')' : '');
+    const body = 'Hi Filip,\n\nI got blocked trying to reach ' + (destLabel || 'the private site') + '. Please let me know what I need to do.\n\nMy name / TCD email: \n\n' + diagnostics() + '\n';
+    $('mail').href = 'mailto:' + CONTACT + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
+  $('copy').addEventListener('click', async (e) => {
+    const btn = e.currentTarget, old = btn.textContent;
+    try { await navigator.clipboard.writeText(diagnostics()); btn.textContent = '✓ Copied'; }
+    catch (err) {
+      const ta = document.createElement('textarea'); ta.value = diagnostics(); document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); btn.textContent = '✓ Copied'; } catch (e2) { btn.textContent = 'Copy failed'; }
+      ta.remove();
+    }
+    setTimeout(() => { btn.textContent = old; }, 1800);
+  });
+  $('retry').addEventListener('click', (e) => { if (verdictState !== 'ok') e.preventDefault(); });
+
+  /* ---------- 5. Run it, and keep watching so the page notices when you fix things ---------- */
+  let busy = false, polls = 0;
+  async function check() {
+    if (busy) return; busy = true;
+    $('recheck').disabled = true;
+    const t = await getTrace();
+    render(t); updateMail();
+    $('recheck').disabled = false; busy = false;
+    return t;
+  }
+  $('recheck').addEventListener('click', () => { polls = 0; check(); });
+  updateMail();
+  check();
+  const timer = setInterval(async () => {
+    if (document.visibilityState !== 'visible') return;
+    if (++polls > 20 || verdictState === 'ok') return clearInterval(timer);
+    check();
+  }, 8000);
+})();
+</script>
+</body>
+</html>
